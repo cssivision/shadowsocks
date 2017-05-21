@@ -42,6 +42,7 @@ type CipherInfo struct {
 
 var cipherMethods = map[string]*CipherInfo{
 	"aes-128-cfb": &CipherInfo{16, 16, newAESCFBStream},
+	"aes-256-cfb": &CipherInfo{32, 16, newAESCFBStream},
 }
 
 func NewCiper(method, password string) (*Cipher, error) {
