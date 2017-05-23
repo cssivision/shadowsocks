@@ -11,6 +11,8 @@ var (
 	defaultTimeout   = 300
 	defaultMethod    = "ase-128-cfb"
 	defaultPassword  = "shadowsocks-secret-key"
+
+	config = new(Config)
 )
 
 type Config struct {
@@ -31,7 +33,6 @@ func ParseConfig(configPath string) (*Config, error) {
 	if err != nil {
 		return nil, err
 	}
-	config := new(Config)
 	if err := json.Unmarshal(data, config); err != nil {
 		return nil, err
 	}
@@ -57,4 +58,8 @@ func ParseConfig(configPath string) (*Config, error) {
 	}
 
 	return config, nil
+}
+
+func GetConfig() *Config {
+	return config
 }
