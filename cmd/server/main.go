@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"math/rand"
 	"net"
 	"strconv"
 	"syscall"
@@ -17,6 +18,10 @@ import (
 var (
 	config *shadowsocks.Config
 )
+
+func init() {
+	rand.Seed(time.Now().Unix())
+}
 
 const (
 	idType  = 0 // address type index

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"math/rand"
 	"net"
 
 	"github.com/cssivision/shadowsocks"
@@ -13,6 +14,10 @@ import (
 var (
 	config *shadowsocks.Config
 )
+
+func init() {
+	rand.Seed(time.Now().Unix())
+}
 
 func handleConnection(conn net.Conn) {
 	defer conn.Close()
