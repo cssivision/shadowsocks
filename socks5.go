@@ -1,9 +1,12 @@
 package shadowsocks
 
 import (
+	"encoding/binary"
 	"errors"
 	"io"
+	"log"
 	"net"
+	"strconv"
 	"time"
 )
 
@@ -54,7 +57,7 @@ func handShake(conn net.Conn) (err error) {
 	return
 }
 
-func getRequest(conn net.Conn) (rawaddr []byte, host string, err error) {
+func getAddrInfo(conn net.Conn) (rawaddr []byte, host string, err error) {
 	const (
 		idVer   = 0
 		idCmd   = 1
@@ -64,8 +67,8 @@ func getRequest(conn net.Conn) (rawaddr []byte, host string, err error) {
 		idDm0   = 5 // domain address start index
 
 		typeIPv4 = 1 // type is ipv4 address
-		typeDm   = 3 // type is domain address
 		typeIPv6 = 4 // type is ipv6 address
+		typeDm   = 3 // type is domain address
 
 		lenIPv4   = 3 + 1 + net.IPv4len + 2 // 3(ver+cmd+rsv) + 1addrType + ipv4 + 2port
 		lenIPv6   = 3 + 1 + net.IPv6len + 2 // 3(ver+cmd+rsv) + 1addrType + ipv6 + 2port
@@ -115,5 +118,26 @@ func getRequest(conn net.Conn) (rawaddr []byte, host string, err error) {
 	}
 
 	rawaddr = buf[idType:reqLen]
+
+	switch buf[idType] {
+	case typeIPv4:
+		host = net.IP(buf[idIP0 : idIP0+net.IPv4len]).String()
+	case typeIPv6:
+		host = net.IP(buf[idIP0 : idIP0+net.IPv6len]).String()
+	case typeDm:
+		host = string(buf[idDm0 : idDm0+buf[idDmLen]])
+	}
+	port := binary.BigEndian.Uint16(buf[reqLen-2 : reqLen])
+	host = net.JoinHostPort(host, strconv.Itoa(int(port)))
+
 	return
+}
+
+func Socks5Negotiate(conn net.Conn) ([]byte, string, error) {
+	if err := handShake(conn); err != nil {
+		log.Println("socks handshake:", err)
+		return nil, "", err
+	}
+
+	return getAddrInfo(conn)
 }

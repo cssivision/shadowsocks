@@ -45,7 +45,7 @@ var cipherMethods = map[string]*CipherInfo{
 	"aes-256-cfb": &CipherInfo{32, 16, newAESCFBStream},
 }
 
-func NewCiper(method, password string) (*Cipher, error) {
+func NewCipher(method, password string) (*Cipher, error) {
 	c := new(Cipher)
 	info, ok := cipherMethods[method]
 	if !ok {
