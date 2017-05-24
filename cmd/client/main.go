@@ -17,19 +17,10 @@ var (
 func handleConnection(conn net.Conn) {
 	defer conn.Close()
 
-	log.Println("socks connect from %s\n", conn.RemoteAddr().String())
+	log.Printf("socks connect from %s\n", conn.RemoteAddr().String())
 	rawaddr, host, err := shadowsocks.Socks5Negotiate(conn)
 	if err != nil {
 		log.Printf("socks negotiate with %v error: %v", host, err)
-	}
-
-	// Sending connection established message immediately to client.
-	// This some round trip time for creating socks connection with the client.
-	// But if connection failed, the client will get connection reset error.
-	_, err = conn.Write([]byte{0x05, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x08, 0x43})
-	if err != nil {
-		log.Println("send connection confirmation: ", err)
-		return
 	}
 
 	cipher, err := shadowsocks.NewCipher(config.Method, config.Password)
@@ -37,15 +28,17 @@ func handleConnection(conn net.Conn) {
 		log.Println("init cipher method error: ", err)
 	}
 
-	serverConn, err := shadowsocks.DialWithCipher(config.ServerAddr, cipher)
+	serverConn, err := shadowsocks.DialWithCipher(config.ServerAddr, cipher.Reset())
 	if err != nil {
-		log.Println("connect to server error: ", err)
+		log.Printf("connect to server error: %v", err)
+		return
 	}
 	defer serverConn.Close()
 
 	_, err = serverConn.Write(rawaddr)
 	if err != nil {
-
+		log.Printf("write data to server error: %v", err)
+		return
 	}
 
 	go io.Copy(conn, serverConn)
@@ -81,6 +74,7 @@ func main() {
 		conn, err := lis.Accept()
 		if err != nil {
 			log.Println(err)
+			continue
 		}
 
 		go handleConnection(conn)

@@ -8,8 +8,8 @@ import (
 
 var (
 	defaultLocalAddr = "0.0.0.0:6009"
-	defaultTimeout   = 300
-	defaultMethod    = "ase-128-cfb"
+	defaultTimeout   = 10
+	defaultMethod    = "aes-128-cfb"
 	defaultPassword  = "shadowsocks-secret-key"
 
 	config = new(Config)

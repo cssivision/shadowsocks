@@ -85,3 +85,11 @@ func (c *Cipher) Encrypt(dst, src []byte) {
 func (c *Cipher) Decrypt(dst, src []byte) {
 	c.dec.XORKeyStream(dst, src)
 }
+
+func (c *Cipher) Reset() *Cipher {
+	nc := *c
+	nc.dec = nil
+	nc.enc = nil
+
+	return &nc
+}

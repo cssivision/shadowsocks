@@ -130,6 +130,15 @@ func getAddrInfo(conn net.Conn) (rawaddr []byte, host string, err error) {
 	port := binary.BigEndian.Uint16(buf[reqLen-2 : reqLen])
 	host = net.JoinHostPort(host, strconv.Itoa(int(port)))
 
+	// Sending connection established message immediately to client.
+	// This some round trip time for creating socks connection with the client.
+	// But if connection failed, the client will get connection reset error.
+	_, err = conn.Write([]byte{0x05, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x08, 0x43})
+	if err != nil {
+		log.Println("send connection confirmation: ", err)
+		return
+	}
+
 	return
 }
 

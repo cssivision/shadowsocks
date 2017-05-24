@@ -44,7 +44,7 @@ func (c *Conn) Read(b []byte) (int, error) {
 
 func (c *Conn) Write(b []byte) (int, error) {
 	var iv []byte
-	if c.dec == nil {
+	if c.enc == nil {
 		if err := c.initEncrypt(); err != nil {
 			return 0, err
 		}
