@@ -3,5 +3,5 @@
 	"password": "sivision",
 	"local_addr": "6009",
 	"method": "aes-128-cfb",
-	"timeout": 10
+	"timeout": 300
 }
