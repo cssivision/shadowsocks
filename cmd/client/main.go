@@ -3,10 +3,10 @@ package main
 import (
 	"flag"
 	"fmt"
-	"io"
 	"log"
 	"math/rand"
 	"net"
+	"time"
 
 	"github.com/cssivision/shadowsocks"
 )
@@ -22,7 +22,7 @@ func init() {
 func handleConnection(conn net.Conn) {
 	defer conn.Close()
 
-	log.Printf("socks connect from %s\n", conn.RemoteAddr().String())
+	// log.Printf("socks connect from %s\n", conn.RemoteAddr().String())
 	rawaddr, host, err := shadowsocks.Socks5Negotiate(conn)
 	if err != nil {
 		log.Printf("socks negotiate with %v error: %v", host, err)
@@ -33,7 +33,7 @@ func handleConnection(conn net.Conn) {
 		log.Println("init cipher method error: ", err)
 	}
 
-	serverConn, err := shadowsocks.DialWithCipher(config.ServerAddr, cipher.Reset())
+	serverConn, err := shadowsocks.DialWithCipher(config.ServerAddr, cipher.Clone())
 	if err != nil {
 		log.Printf("connect to server error: %v", err)
 		return
@@ -46,8 +46,13 @@ func handleConnection(conn net.Conn) {
 		return
 	}
 
-	go io.Copy(conn, serverConn)
-	io.Copy(serverConn, conn)
+	go func() {
+		defer conn.Close()
+		shadowsocks.CopyBuffer(conn, serverConn)
+	}()
+
+	shadowsocks.CopyBuffer(serverConn, conn)
+	serverConn.Close()
 }
 
 func main() {

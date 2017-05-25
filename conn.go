@@ -37,7 +37,7 @@ func (c *Conn) Read(b []byte) (int, error) {
 
 	n, err := c.Conn.Read(cipherData)
 	if n > 0 {
-		c.Decrypt(b, cipherData)
+		c.Decrypt(b[0:n], cipherData[0:n])
 	}
 	return n, err
 }
@@ -60,5 +60,6 @@ func (c *Conn) Write(b []byte) (int, error) {
 	}
 
 	c.Encrypt(cipherData[len(iv):], b)
-	return c.Conn.Write(cipherData)
+	n, err := c.Conn.Write(cipherData)
+	return n, err
 }

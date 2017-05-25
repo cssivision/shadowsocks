@@ -88,17 +88,13 @@ func getAddrInfo(conn *shadowsocks.Conn) (string, error) {
 }
 
 func handleConnection(conn *shadowsocks.Conn) {
-	defer conn.Close()
-
 	host, err := getAddrInfo(conn)
 	if err != nil {
 		log.Printf("get host error: %v", err)
 		return
 	}
 
-	fmt.Print(host)
-
-	log.Printf("connection to host: %v", host)
+	// log.Printf("connection to host: %v", host)
 	remote, err := net.Dial("tcp", host)
 	if err != nil {
 		if ne, ok := err.(*net.OpError); ok && (ne.Err == syscall.EMFILE || ne.Err == syscall.ENFILE) {
@@ -111,10 +107,13 @@ func handleConnection(conn *shadowsocks.Conn) {
 		return
 	}
 
-	defer remote.Close()
+	go func() {
+		defer conn.Close()
+		shadowsocks.CopyBuffer(conn, remote)
+	}()
 
-	go io.Copy(conn, remote)
-	io.Copy(remote, conn)
+	shadowsocks.CopyBuffer(remote, conn)
+	remote.Close()
 }
 
 func main() {
@@ -154,6 +153,6 @@ func main() {
 			continue
 		}
 
-		go handleConnection(shadowsocks.NewConn(conn, cipher.Reset()))
+		go handleConnection(shadowsocks.NewConn(conn, cipher.Clone()))
 	}
 }
