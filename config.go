@@ -8,7 +8,7 @@ import (
 
 var (
 	defaultLocalAddr = "0.0.0.0:6009"
-	defaultTimeout   = 10
+	defaultTimeout   = 300
 	defaultMethod    = "aes-128-cfb"
 	defaultPassword  = "shadowsocks-secret-key"
 
@@ -58,8 +58,4 @@ func ParseConfig(configPath string) (*Config, error) {
 	}
 
 	return config, nil
-}
-
-func GetConfig() *Config {
-	return config
 }
