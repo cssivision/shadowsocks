@@ -94,7 +94,7 @@ func handleConnection(conn *shadowsocks.Conn) {
 		return
 	}
 
-	// log.Printf("connection to host: %v", host)
+	log.Printf("connection to host: %v", host)
 	remote, err := net.Dial("tcp", host)
 	if err != nil {
 		if ne, ok := err.(*net.OpError); ok && (ne.Err == syscall.EMFILE || ne.Err == syscall.ENFILE) {
