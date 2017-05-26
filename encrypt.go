@@ -9,23 +9,6 @@ import (
 	"io"
 )
 
-func newStream(block cipher.Block, iv []byte, isEncrypt bool) (cipher.Stream, error) {
-	if isEncrypt {
-		return cipher.NewCFBEncrypter(block, iv), nil
-	} else {
-		return cipher.NewCFBDecrypter(block, iv), nil
-	}
-}
-
-func newAESCFBStream(key, iv []byte, isEncrypt bool) (cipher.Stream, error) {
-	block, err := aes.NewCipher(key)
-	if err != nil {
-		return nil, err
-	}
-
-	return newStream(block, iv, isEncrypt)
-}
-
 type Cipher struct {
 	enc  cipher.Stream
 	dec  cipher.Stream
@@ -43,6 +26,23 @@ type CipherInfo struct {
 var cipherMethods = map[string]*CipherInfo{
 	"aes-128-cfb": &CipherInfo{16, 16, newAESCFBStream},
 	"aes-256-cfb": &CipherInfo{32, 16, newAESCFBStream},
+}
+
+func newStream(block cipher.Block, iv []byte, isEncrypt bool) (cipher.Stream, error) {
+	if isEncrypt {
+		return cipher.NewCFBEncrypter(block, iv), nil
+	} else {
+		return cipher.NewCFBDecrypter(block, iv), nil
+	}
+}
+
+func newAESCFBStream(key, iv []byte, isEncrypt bool) (cipher.Stream, error) {
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		return nil, err
+	}
+
+	return newStream(block, iv, isEncrypt)
 }
 
 func NewCipher(method, password string) (*Cipher, error) {
