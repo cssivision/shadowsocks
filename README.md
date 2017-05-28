@@ -30,7 +30,7 @@ config.json
 server -c config.json
 ```
 
-install a [client](https://shadowsocks.org/en/download/clients.html), connect to your server using you configuration, Done!
+install a [client](https://shadowsocks.org/en/download/clients.html), connect to your server using your configuration, Done!
 
 # Licenses
 
