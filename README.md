@@ -27,7 +27,7 @@ config.json
 # Usage 
 #### server
 ```sh
-server -c config.json
+ssserver -c config.json
 ```
 
 install a [client](https://shadowsocks.org/en/download/clients.html), connect to your server using your configuration, Done!
