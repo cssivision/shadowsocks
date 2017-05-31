@@ -4,12 +4,12 @@ minimalist port of shadowsocks, only reserve basic feature for personal usage.
 # Installation
 #### server
 ```sh
-go get github.com/cssivision/shadowsocks/cmd/server
+go get github.com/cssivision/shadowsocks/cmd/ssserver
 ```
 
 #### client 
 ```sh
-go get github.com/cssivision/shadowsocks/cmd/client
+go get github.com/cssivision/shadowsocks/cmd/sslocal
 ```
 
 # Configuration
