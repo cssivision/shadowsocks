@@ -2,15 +2,15 @@ package shadowsocks
 
 import (
 	"encoding/json"
-	"errors"
 	"io/ioutil"
 )
 
 var (
-	defaultLocalAddr = "0.0.0.0:6009"
-	defaultTimeout   = 300
-	defaultMethod    = "aes-128-cfb"
-	defaultPassword  = "shadowsocks-secret-key"
+	defaultServerAddr = "0.0.0.0:8089"
+	defaultLocalAddr  = "0.0.0.0:6009"
+	defaultTimeout    = 300
+	defaultMethod     = "aes-128-cfb"
+	defaultPassword   = "shadowsocks-secret-key"
 
 	config = new(Config)
 )
@@ -30,15 +30,14 @@ type Config struct {
 
 func ParseConfig(configPath string) (*Config, error) {
 	data, err := ioutil.ReadFile(configPath)
-	if err != nil {
-		return nil, err
-	}
-	if err := json.Unmarshal(data, config); err != nil {
-		return nil, err
+	if err == nil {
+		if err := json.Unmarshal(data, config); err != nil {
+			return nil, err
+		}
 	}
 
 	if config.ServerAddr == "" {
-		return nil, errors.New("server addr can not be empty")
+		config.ServerAddr = defaultServerAddr
 	}
 
 	if config.LocalAddr == "" {
