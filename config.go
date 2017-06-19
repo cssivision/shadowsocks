@@ -56,7 +56,7 @@ func ParseConfig(configPath string) (*Config, error) {
 	}
 
 	if config.Password == "" {
-		password := os.Getenv("SHODOWSOCKS_PASSWORD")
+		password := os.Getenv("SHADOWSOCKS_PASSWORD")
 		if password == "" {
 			password = defaultPassword
 		}
