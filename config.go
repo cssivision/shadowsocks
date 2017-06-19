@@ -3,6 +3,8 @@ package shadowsocks
 import (
 	"encoding/json"
 	"io/ioutil"
+	"os"
+	"strconv"
 )
 
 var (
@@ -37,23 +39,51 @@ func ParseConfig(configPath string) (*Config, error) {
 	}
 
 	if config.ServerAddr == "" {
-		config.ServerAddr = defaultServerAddr
+		serverAddr := os.Getenv("SHADOWSOCKS_SERVER_ADDR")
+		if serverAddr == "" {
+			serverAddr = defaultServerAddr
+		}
+
+		config.ServerAddr = serverAddr
 	}
 
 	if config.LocalAddr == "" {
-		config.LocalAddr = defaultLocalAddr
+		localAddr := os.Getenv("SHADOWSOCKS_LOCAL_ADDR")
+		if localAddr == "" {
+			localAddr = defaultLocalAddr
+		}
+		config.LocalAddr = localAddr
 	}
 
 	if config.Password == "" {
-		config.Password = defaultPassword
+		password := os.Getenv("SHODOWSOCKS_PASSWORD")
+		if password == "" {
+			password = defaultPassword
+		}
+		config.Password = password
 	}
 
 	if config.Timeout == 0 {
-		config.Timeout = defaultTimeout
+		var timeout int64
+		var err error
+		timeoutStr := os.Getenv("SHADOWSOCKS_TIMEOUT")
+		if timeoutStr == "" {
+			timeout = int64(defaultTimeout)
+		} else {
+			timeout, err = strconv.ParseInt(timeoutStr, 10, 32)
+			if err != nil {
+				panic(err)
+			}
+		}
+		config.Timeout = int(timeout)
 	}
 
 	if config.Method == "" {
-		config.Method = defaultMethod
+		method := os.Getenv("SHADOWSOCKS_METHOD")
+		if method == "" {
+			method = defaultMethod
+		}
+		config.Method = method
 	}
 
 	return config, nil
