@@ -4,12 +4,12 @@ minimalist port of shadowsocks, only reserve basic feature for personal usage.
 # Installation
 #### server
 ```sh
-go get github.com/cssivision/shadowsocks/cmd/server
+go get github.com/cssivision/shadowsocks/cmd/ssserver
 ```
 
 #### client 
 ```sh
-go get github.com/cssivision/shadowsocks/cmd/client
+go get github.com/cssivision/shadowsocks/cmd/sslocal
 ```
 
 # Configuration
@@ -27,7 +27,7 @@ config.json
 # Usage 
 #### server
 ```sh
-server -c config.json
+ssserver -c config.json
 ```
 
 install a [client](https://shadowsocks.org/en/download/clients.html), connect to your server using your configuration, Done!
