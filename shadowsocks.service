@@ -6,7 +6,7 @@ After=network.target
 Type=simple
 User=<USER>
 WorkingDirectory=/home/<USER>
-ExecStart=/home/sivision/go/bin/ssserver
+ExecStart=<GOPATH>/bin/ssserver
 Restart=on-abort
 
 Environment=SHADOWSOCKS_SERVER_ADDR=0.0.0.0:8080
