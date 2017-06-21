@@ -1,0 +1,19 @@
+[Unit]
+Description=shadowsocks service
+After=network.target
+
+[Service]
+Type=simple
+User=<USER>
+WorkingDirectory=/home/<USER>
+ExecStart=/home/sivision/go/bin/ssserver
+Restart=on-abort
+
+Environment=SHADOWSOCKS_SERVER_ADDR=0.0.0.0:8080
+Environment=SHADOWSOCKS_LOCAL_ADDR=0.0.0.0:1080
+Environment=SHADOWSOCKS_PASSWORD=password
+Environment=SHADOWSOCKS_TIMEOUT=300
+Environment=SHADOWSOCKS_METHOD=aes-128-cfb
+
+[Install]
+WantedBy=multi-user.target
