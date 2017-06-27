@@ -8,6 +8,7 @@ User=<USER>
 WorkingDirectory=/home/<USER>
 ExecStart=<GOPATH>/bin/ssserver
 Restart=on-abort
+MemoryAccounting=yes
 
 Environment=SHADOWSOCKS_SERVER_ADDR=0.0.0.0:8080
 Environment=SHADOWSOCKS_LOCAL_ADDR=0.0.0.0:1080
