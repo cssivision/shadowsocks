@@ -6,11 +6,13 @@ import (
 	"net"
 )
 
+// Conn conn with cipher
 type Conn struct {
 	net.Conn
 	*Cipher
 }
 
+//NewConn ...
 func NewConn(c net.Conn, cipher *Cipher) *Conn {
 	return &Conn{
 		Conn:   c,

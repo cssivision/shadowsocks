@@ -4,11 +4,12 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
-	"errors"
+	"crypto/rc4"
 	"fmt"
 	"io"
 )
 
+// Cipher struct
 type Cipher struct {
 	enc  cipher.Stream
 	dec  cipher.Stream
@@ -26,14 +27,20 @@ type CipherInfo struct {
 var cipherMethods = map[string]*CipherInfo{
 	"aes-128-cfb": &CipherInfo{16, 16, newAESCFBStream},
 	"aes-256-cfb": &CipherInfo{32, 16, newAESCFBStream},
+	"rc4-md5":     &CipherInfo{16, 16, newRC4MD5Stream},
 }
 
 func newStream(block cipher.Block, iv []byte, isEncrypt bool) (cipher.Stream, error) {
 	if isEncrypt {
 		return cipher.NewCFBEncrypter(block, iv), nil
-	} else {
-		return cipher.NewCFBDecrypter(block, iv), nil
 	}
+
+	return cipher.NewCFBDecrypter(block, iv), nil
+}
+
+func newRC4MD5Stream(key, iv []byte, _ bool) (cipher.Stream, error) {
+	rc4key := md5sum(append(key, iv...))
+	return rc4.NewCipher(rc4key)
 }
 
 func newAESCFBStream(key, iv []byte, isEncrypt bool) (cipher.Stream, error) {
@@ -45,12 +52,14 @@ func newAESCFBStream(key, iv []byte, isEncrypt bool) (cipher.Stream, error) {
 	return newStream(block, iv, isEncrypt)
 }
 
+// NewCipher ...
 func NewCipher(method, password string) (*Cipher, error) {
 	c := new(Cipher)
 	info, ok := cipherMethods[method]
 	if !ok {
-		return nil, errors.New(fmt.Sprintf("unsupport encrypt method: %v", method))
+		return nil, fmt.Errorf("unsupport encrypt method: %v", method)
 	}
+
 	c.info = info
 	key := generateKey(password, info.keyLen)
 	c.key = key
@@ -78,14 +87,17 @@ func (c *Cipher) initEncrypt() error {
 	return err
 }
 
+// Encrypt encrypt data
 func (c *Cipher) Encrypt(dst, src []byte) {
 	c.enc.XORKeyStream(dst, src)
 }
 
+// Decrypt decrypt data
 func (c *Cipher) Decrypt(dst, src []byte) {
 	c.dec.XORKeyStream(dst, src)
 }
 
+// Clone cipher clone
 func (c *Cipher) Clone() *Cipher {
 	nc := *c
 	nc.dec = nil
