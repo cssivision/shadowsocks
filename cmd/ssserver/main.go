@@ -49,6 +49,7 @@ func getAddrInfo(conn *shadowsocks.Conn) (string, error) {
 	// 1(addrType) + 1(lenByte) + 255(max length address) + 2(port) + 10(hmac-sha1)
 	buf := make([]byte, 269)
 	if _, err := io.ReadFull(conn, buf[:idType+1]); err != nil {
+		shadowsocks.WriteRandomData(conn)
 		return "", err
 	}
 
@@ -61,14 +62,17 @@ func getAddrInfo(conn *shadowsocks.Conn) (string, error) {
 		reqStart, reqEnd = idIP0, idIP0+lenIPv6
 	case typeDm:
 		if _, err := io.ReadFull(conn, buf[idType+1:idDmLen+1]); err != nil {
+			shadowsocks.WriteRandomData(conn)
 			return "", err
 		}
 		reqStart, reqEnd = idDm0, idDm0+int(buf[idDmLen])+lenDmBase
 	default:
+		shadowsocks.WriteRandomData(conn)
 		return "", fmt.Errorf("addr type %d not supported", addrType&addrMask)
 	}
 
 	if _, err := io.ReadFull(conn, buf[reqStart:reqEnd]); err != nil {
+		shadowsocks.WriteRandomData(conn)
 		return "", err
 	}
 
@@ -90,6 +94,7 @@ func getAddrInfo(conn *shadowsocks.Conn) (string, error) {
 func handleConnection(conn *shadowsocks.Conn) {
 	host, err := getAddrInfo(conn)
 	if err != nil {
+		shadowsocks.WriteRandomData(conn)
 		log.Printf("get host error: %v", err)
 		return
 	}

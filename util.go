@@ -2,8 +2,10 @@ package shadowsocks
 
 import (
 	"crypto/md5"
+	"crypto/rand"
 	"io"
 	"math"
+	mrand "math/rand"
 )
 
 func md5sum(b []byte) []byte {
@@ -53,4 +55,16 @@ func CopyBuffer(dst io.Writer, src io.Reader) (written int64, err error) {
 		}
 	}
 	return written, err
+}
+
+// WriteRandomData ...
+func WriteRandomData(r io.Writer) error {
+	rlen := mrand.Int() % 8767
+	data := make([]byte, rlen)
+	_, err := io.ReadFull(rand.Reader, data)
+	if err != nil {
+		return err
+	}
+	_, err = r.Write(data)
+	return err
 }
