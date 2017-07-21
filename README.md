@@ -2,7 +2,7 @@
 minimalist port of shadowsocks, only reserve basic feature for personal usage.
 
 # Installation
-prebuild [releases](https://github.com/cssivision/shadowsocks/releases).
+prebuilt [releases](https://github.com/cssivision/shadowsocks/releases).
 
 #### server
 ```sh
