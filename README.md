@@ -2,11 +2,12 @@
 minimalist port of shadowsocks, only reserve basic feature for personal usage.
 
 # Installation
+prebuild [releases](https://github.com/cssivision/shadowsocks/releases).
+
 #### server
 ```sh
 go get github.com/cssivision/shadowsocks/cmd/ssserver
 ```
-prebuild [releases](https://github.com/cssivision/shadowsocks/releases).
 
 #### client 
 ```sh
