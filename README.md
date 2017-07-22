@@ -2,8 +2,7 @@
 minimalist port of shadowsocks, only reserve basic feature for personal usage.
 
 # Installation
-prebuilt [releases](https://github.com/cssivision/shadowsocks/releases).
-
+Fetch the [latest release](https://github.com/cssivision/shadowsocks/releases) for your platform, or: 
 #### server
 ```sh
 go get github.com/cssivision/shadowsocks/cmd/ssserver
