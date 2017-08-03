@@ -1,0 +1,23 @@
+language: go
+
+matrix:
+  include:
+    - go: 1.7.x
+    - go: 1.8.x
+    - master
+
+before_install:
+  - go get -t -v ./...
+  - go get github.com/modocache/gover
+  - go get github.com/mattn/goveralls
+
+script:
+  - go vet $(go list ./... | grep -v /vendor/)
+  - go test -v -race ./...
+  - go test -coverprofile=shadowsocks.coverprofile
+  - gover
+  - goveralls -coverprofile=gover.coverprofile -service=travis-ci
+
+notifications:
+  email:
+    on_success: never

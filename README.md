@@ -1,4 +1,8 @@
 # shadowsocks
+[![Build Status](https://img.shields.io/travis/cssivision/shadowsocks.svg?style=flat-square)](https://travis-ci.org/cssivision/shadowsocks)
+[![Coverage Status](http://img.shields.io/coveralls/cssivision/shadowsocks.svg?style=flat-square)](https://coveralls.io/github/cssivision/shadowsocks?branch=master)
+[![License](http://img.shields.io/badge/license-mit-blue.svg?style=flat-square)](https://github.com/cssivision/shadowsocks/blob/master/LICENSE)
+
 minimalist port of shadowsocks, only reserve basic feature for personal usage.
 
 # Installation
