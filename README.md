@@ -6,11 +6,20 @@
 minimalist port of shadowsocks, only reserve basic feature for personal usage.
 
 # Installation
+#### Fetch the [latest release](https://github.com/cssivision/shadowsocks/releases).
+### linux 
+```sh
+https://github.com/cssivision/shadowsocks/releases/download/v0.1.5/ssserver.linux
+```
+### macos
+```sh 
+https://github.com/cssivision/shadowsocks/releases/download/v0.1.5/ssserver.macos
+```
+#### use go command
 #### server
 ```sh
 go get github.com/cssivision/shadowsocks/cmd/ssserver
 ```
-prebuild [releases](https://github.com/cssivision/shadowsocks/releases).
 
 #### client 
 ```sh
