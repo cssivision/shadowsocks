@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestNewCipher(t *testing.T) {
@@ -15,13 +16,27 @@ func TestNewCipher(t *testing.T) {
 
 	t.Run("cipher aes-128-cfb", func(t *testing.T) {
 		cipher, err := NewCipher("aes-128-cfb", "password")
-		assert.Nil(t, err)
+		require.Nil(t, err)
 		assert.NotNil(t, cipher)
 		assert.Equal(t, 16, cipher.info.keyLen)
 		assert.Equal(t, 16, cipher.info.ivLen)
 		assert.Equal(t, generateKey("password", 16), cipher.key)
 		assert.Nil(t, cipher.enc)
 		assert.Nil(t, cipher.dec)
+
+		require.Nil(t, cipher.initEncrypt())
+		assert.Equal(t, len(cipher.iv), cipher.info.ivLen)
+		plaintext := []byte("test data")
+		encrypttext := make([]byte, len(plaintext))
+		cipher.Encrypt(encrypttext, plaintext)
+		require.Nil(t, cipher.initDecrypt(cipher.iv))
+		decrypttext := make([]byte, len(plaintext))
+		cipher.Decrypt(decrypttext, encrypttext)
+		assert.Equal(t, plaintext, decrypttext)
+
+		newCipher := cipher.Clone()
+		assert.Nil(t, newCipher.dec)
+		assert.Nil(t, newCipher.enc)
 	})
 
 	t.Run("cipher aes-256-cfb", func(t *testing.T) {
@@ -33,6 +48,20 @@ func TestNewCipher(t *testing.T) {
 		assert.Equal(t, generateKey("password", 32), cipher.key)
 		assert.Nil(t, cipher.enc)
 		assert.Nil(t, cipher.dec)
+
+		require.Nil(t, cipher.initEncrypt())
+		assert.Equal(t, len(cipher.iv), cipher.info.ivLen)
+		plaintext := []byte("test data")
+		encrypttext := make([]byte, len(plaintext))
+		cipher.Encrypt(encrypttext, plaintext)
+		require.Nil(t, cipher.initDecrypt(cipher.iv))
+		decrypttext := make([]byte, len(plaintext))
+		cipher.Decrypt(decrypttext, encrypttext)
+		assert.Equal(t, plaintext, decrypttext)
+
+		newCipher := cipher.Clone()
+		assert.Nil(t, newCipher.dec)
+		assert.Nil(t, newCipher.enc)
 	})
 
 	t.Run("cipher rc4-md5", func(t *testing.T) {
@@ -44,5 +73,19 @@ func TestNewCipher(t *testing.T) {
 		assert.Equal(t, generateKey("password", 16), cipher.key)
 		assert.Nil(t, cipher.enc)
 		assert.Nil(t, cipher.dec)
+
+		require.Nil(t, cipher.initEncrypt())
+		assert.Equal(t, len(cipher.iv), cipher.info.ivLen)
+		plaintext := []byte("test data")
+		encrypttext := make([]byte, len(plaintext))
+		cipher.Encrypt(encrypttext, plaintext)
+		require.Nil(t, cipher.initDecrypt(cipher.iv))
+		decrypttext := make([]byte, len(plaintext))
+		cipher.Decrypt(decrypttext, encrypttext)
+		assert.Equal(t, plaintext, decrypttext)
+
+		newCipher := cipher.Clone()
+		assert.Nil(t, newCipher.dec)
+		assert.Nil(t, newCipher.enc)
 	})
 }

@@ -89,8 +89,3 @@ func ParseConfig(configPath string) (*Config, error) {
 
 	return config, nil
 }
-
-// GetConfig ...
-func GetConfig() *Config {
-	return config
-}
