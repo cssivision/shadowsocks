@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestMd5sum(t *testing.T) {
@@ -32,4 +33,9 @@ func TestCopyBuffer(t *testing.T) {
 	src.Write(sourceDate)
 	CopyBuffer(dst, src)
 	assert.Equal(t, dst.Bytes(), sourceDate)
+}
+
+func TestWriteRandomData(t *testing.T) {
+	buf := bytes.NewBuffer(nil)
+	require.Nil(t, WriteRandomData(buf))
 }
