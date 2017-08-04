@@ -30,6 +30,7 @@ type Config struct {
 	Timeout int `json:"timeout"`
 }
 
+// ParseConfig parse config both from file or env variable
 func ParseConfig(configPath string) (*Config, error) {
 	data, err := ioutil.ReadFile(configPath)
 	if err == nil {
@@ -87,4 +88,9 @@ func ParseConfig(configPath string) (*Config, error) {
 	}
 
 	return config, nil
+}
+
+// GetConfig ...
+func GetConfig() *Config {
+	return config
 }

@@ -30,14 +30,6 @@ var cipherMethods = map[string]*CipherInfo{
 	"rc4-md5":     &CipherInfo{16, 16, newRC4MD5Stream},
 }
 
-func newStream(block cipher.Block, iv []byte, isEncrypt bool) (cipher.Stream, error) {
-	if isEncrypt {
-		return cipher.NewCFBEncrypter(block, iv), nil
-	}
-
-	return cipher.NewCFBDecrypter(block, iv), nil
-}
-
 func newRC4MD5Stream(key, iv []byte, _ bool) (cipher.Stream, error) {
 	rc4key := md5sum(append(key, iv...))
 	return rc4.NewCipher(rc4key)
@@ -49,7 +41,11 @@ func newAESCFBStream(key, iv []byte, isEncrypt bool) (cipher.Stream, error) {
 		return nil, err
 	}
 
-	return newStream(block, iv, isEncrypt)
+	if isEncrypt {
+		return cipher.NewCFBEncrypter(block, iv), nil
+	}
+
+	return cipher.NewCFBDecrypter(block, iv), nil
 }
 
 // NewCipher ...
