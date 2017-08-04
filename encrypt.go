@@ -18,6 +18,7 @@ type Cipher struct {
 	info *CipherInfo
 }
 
+// CipherInfo ...
 type CipherInfo struct {
 	keyLen    int
 	ivLen     int

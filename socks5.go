@@ -142,6 +142,7 @@ func getAddrInfo(conn net.Conn) (rawaddr []byte, host string, err error) {
 	return
 }
 
+// Socks5Negotiate ...
 func Socks5Negotiate(conn net.Conn) ([]byte, string, error) {
 	if err := handShake(conn); err != nil {
 		log.Println("socks handshake:", err)

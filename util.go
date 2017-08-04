@@ -32,6 +32,7 @@ func generateKey(password string, keyLen int) []byte {
 	return r[:keyLen]
 }
 
+// CopyBuffer ...
 func CopyBuffer(dst io.Writer, src io.Reader) (written int64, err error) {
 	buf := make([]byte, 32*1024)
 

@@ -17,6 +17,7 @@ var (
 	config = new(Config)
 )
 
+// Config ...
 type Config struct {
 	// local addr, default is ":6009"
 	LocalAddr string `json:"local_addr"`
