@@ -16,6 +16,8 @@ type Cipher struct {
 	key  []byte
 	iv   []byte
 	info *CipherInfo
+	// crypto method
+	method string
 }
 
 // CipherInfo ...
@@ -60,6 +62,7 @@ func NewCipher(method, password string) (*Cipher, error) {
 	c.info = info
 	key := generateKey(password, info.keyLen)
 	c.key = key
+	c.method = method
 
 	return c, nil
 }
