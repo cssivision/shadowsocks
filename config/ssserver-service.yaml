@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ssserver
+  labels:
+    app: ssserve
+    tier: ssserver
+spec:
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port: 34809
+    targetPort: 9006
+  selector:
+    app: ssserver
+    tier: ssserver

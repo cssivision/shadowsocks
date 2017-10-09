@@ -1,0 +1,32 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: ssserver
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: ssserver
+        tier: ssserver
+    spec:
+      containers:
+      - name: ssserver
+        image: asia.gcr.io/nomadic-rite-167010/ssserver:v0.1.3
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        env:
+        - name: SHADOWSOCKS_SERVER_ADDR
+          value: "0.0.0.0:9006"
+        - name: SHADOWSOCKS_LOCAL_ADDR
+          value: "0.0.0.0:6009"
+        - name: SHADOWSOCKS_PASSWORD
+          value: "password"
+        - name: SHADOWSOCKS_TIMEOUT
+          value: "100"
+        - name: SHADOWSOCKS_METHOD
+          value: "aes-256-cfb"
+        ports:
+        - containerPort: 9006

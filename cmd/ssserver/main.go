@@ -114,10 +114,16 @@ func handleConnection(conn *shadowsocks.Conn) {
 
 	go func() {
 		defer conn.Close()
-		shadowsocks.CopyBuffer(conn, remote)
+		_, err := shadowsocks.CopyBuffer(conn, remote)
+		if err != nil {
+			log.Printf("error: %v", err)
+		}
 	}()
 
-	shadowsocks.CopyBuffer(remote, conn)
+	_, err = shadowsocks.CopyBuffer(remote, conn)
+	if err != nil {
+		log.Printf("error: %v", err)
+	}
 	remote.Close()
 }
 
